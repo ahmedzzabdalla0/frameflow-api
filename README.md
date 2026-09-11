@@ -13,7 +13,7 @@ A production-ready **NestJS 12 + PostgreSQL + Prisma 7** backend for the FrameFl
 
 ## 1. Project Overview
 
-FrameFlow API is a pure JSON + media-streaming backend built on NestJS's modular architecture. It scans a folder of video files and stores metadata (title, duration, size, rating, categories, thumbnail seek time) in a PostgreSQL database via Prisma 7 ORM. Thumbnails are generated on demand with `ffmpeg`. The Next.js frontend is the only client; this service exposes no server-rendered views.
+FrameFlow API is a pure JSON + media-streaming backend built on NestJS's modular architecture. It scans a folder of video files and stores metadata (title, duration, size, rating, categories, thumbnail seek time) in a PostgreSQL database via Prisma 7 ORM. Thumbnails are generated on demand with `ffmpeg`. The Next.js frontend — **[frameflow-web](https://github.com/ahmedzzabdalla0/frameflow-web)** — is the only client; this service exposes no server-rendered views.
 
 Key design decisions:
 
