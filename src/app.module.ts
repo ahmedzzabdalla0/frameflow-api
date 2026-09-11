@@ -39,6 +39,7 @@ import { FfmpegModule } from './modules/ffmpeg/ffmpeg.module';
       },
     }),
     ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService<AppConfig, true>) => [
         {
