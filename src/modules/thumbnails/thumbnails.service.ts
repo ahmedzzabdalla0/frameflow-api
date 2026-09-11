@@ -2,7 +2,7 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { existsSync } from 'node:fs';
 import { readdir, unlink } from 'node:fs/promises';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { AppConfig } from '../../config/configuration';
 import { PrismaService } from '../../prisma/prisma.service';
 import { FfmpegService } from '../ffmpeg/ffmpeg.service';
@@ -22,7 +22,8 @@ export class ThumbnailsService {
     private readonly ffmpegService: FfmpegService,
     configService: ConfigService<AppConfig, true>,
   ) {
-    this.thumbsDir = configService.get('storage.thumbsDir', { infer: true });
+    const configuredDir = configService.get('storage.thumbsDir', { infer: true });
+    this.thumbsDir = resolve(configuredDir);
   }
 
   public thumbnailFileName(relPath: string): string {
