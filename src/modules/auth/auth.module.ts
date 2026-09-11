@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { AppConfig } from '../../config/configuration';
 import { UsersModule } from '../users/users.module';
@@ -16,7 +16,11 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       inject: [ConfigService],
       useFactory: (configService: ConfigService<AppConfig, true>) => ({
         secret: configService.get('jwt.secret', { infer: true }),
-        signOptions: { expiresIn: configService.get('jwt.expiresIn', { infer: true }) },
+        signOptions: {
+          expiresIn: configService.get('jwt.expiresIn', { infer: true }) as unknown as NonNullable<
+            JwtModuleOptions['signOptions']
+          >['expiresIn'],
+        },
       }),
     }),
   ],
