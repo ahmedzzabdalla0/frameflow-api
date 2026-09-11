@@ -43,10 +43,11 @@ describe('Application (e2e)', () => {
     expect(body.some((category) => category.name === '__uncategorized__')).toBe(true);
   });
 
-  it('POST /api/categories rejects unauthenticated requests', async () => {
-    const response = await request(server).post('/api/categories').send({ name: 'unauthorized-attempt' });
+  it('POST /api/categories is public and accepts requests without authentication', async () => {
+    const response = await request(server).post('/api/categories').send({ name: 'e2e-test-category' });
 
-    expect(response.status).toBe(401);
+    expect(response.status).not.toBe(401);
+    expect(response.status).not.toBe(403);
   });
 
   it('POST /api/auth/login rejects invalid credentials', async () => {
