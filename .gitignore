@@ -1,0 +1,10 @@
+node_modules
+dist
+.env
+*.log
+storage/uploads/*
+storage/thumbs/*
+backups/postgres/*
+!storage/uploads/.gitkeep
+!storage/thumbs/.gitkeep
+!backups/postgres/.gitkeep

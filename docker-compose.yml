@@ -1,0 +1,51 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - '5433:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: ${PORT:-3568}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-frameflow}:${POSTGRES_PASSWORD:-frameflow}@db:5432/${POSTGRES_DB:-frameflow}?schema=public
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-1d}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      UPLOADS_DIR: /app/storage/uploads
+      THUMBS_DIR: /app/storage/thumbs
+      VIDEO_EXTENSIONS: ${VIDEO_EXTENSIONS:-.mp4,.mov,.webm,.m4v,.mkv}
+      CORS_ORIGIN: ${CORS_ORIGIN:-*}
+      THROTTLE_TTL_SECONDS: ${THROTTLE_TTL_SECONDS:-60}
+      THROTTLE_LIMIT: ${THROTTLE_LIMIT:-120}
+    ports:
+      - '${PORT:-3568}:${PORT:-3568}'
+    volumes:
+      - uploads_data:/app/storage/uploads
+      - thumbs_data:/app/storage/thumbs
+    command: sh -c "npx prisma migrate deploy && node dist/main.js"
+
+volumes:
+  postgres_data:
+  uploads_data:
+  thumbs_data:

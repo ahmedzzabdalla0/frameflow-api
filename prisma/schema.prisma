@@ -1,0 +1,111 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         UserRole @default(ADMIN)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Video {
+  id               Int          @id @default(autoincrement())
+  relPath          String       @unique @map("rel_path")
+  title            String
+  addedAt          DateTime     @default(now()) @map("added_at")
+  durationSeconds  Float        @default(0) @map("duration_seconds")
+  sizeBytes        BigInt       @default(0) @map("size_bytes")
+  rating           Float?
+  thumbSeek        ThumbSeek?
+  categories       VideoCategory[]
+
+  @@index([title])
+  @@index([addedAt])
+  @@index([rating])
+  @@index([durationSeconds])
+  @@index([sizeBytes])
+  @@map("videos")
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  color     String   @default("#e44")
+  position  Int?
+  isReserved Boolean @default(false) @map("is_reserved")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  videos              VideoCategory[]
+  includedInSettings  PlayerSettingsIncludedCategory[]
+  excludedInSettings  PlayerSettingsExcludedCategory[]
+
+  @@index([position])
+  @@map("categories")
+}
+
+model VideoCategory {
+  video      Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  videoId    Int      @map("video_id")
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId Int      @map("category_id")
+
+  @@id([videoId, categoryId])
+  @@index([categoryId])
+  @@map("video_categories")
+}
+
+model ThumbSeek {
+  id        Int      @id @default(autoincrement())
+  video     Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  videoId   Int      @unique @map("video_id")
+  seekTime  String   @map("seek_time")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("thumb_seeks")
+}
+
+model PlayerSettings {
+  id                    Int      @id @default(autoincrement())
+  defaultPureOnly        Boolean  @default(false) @map("default_pure_only")
+  defaultIntersectionOnly Boolean @default(false) @map("default_intersection_only")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  includedCategories PlayerSettingsIncludedCategory[]
+  excludedCategories PlayerSettingsExcludedCategory[]
+
+  @@map("player_settings")
+}
+
+model PlayerSettingsIncludedCategory {
+  settings   PlayerSettings @relation(fields: [settingsId], references: [id], onDelete: Cascade)
+  settingsId Int            @map("settings_id")
+  category   Category       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId Int            @map("category_id")
+
+  @@id([settingsId, categoryId])
+  @@map("player_settings_included_categories")
+}
+
+model PlayerSettingsExcludedCategory {
+  settings   PlayerSettings @relation(fields: [settingsId], references: [id], onDelete: Cascade)
+  settingsId Int            @map("settings_id")
+  category   Category       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId Int            @map("category_id")
+
+  @@id([settingsId, categoryId])
+  @@map("player_settings_excluded_categories")
+}
