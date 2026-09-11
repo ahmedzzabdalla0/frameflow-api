@@ -4,8 +4,9 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169e1?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org)
 [![Prisma](https://img.shields.io/badge/Prisma-7-2d3748?style=flat-square&logo=prisma&logoColor=white)](https://www.prisma.io)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![License: MIT](https://img.shields.io/badge/License-MIT-e44444?style=flat-square)](./LICENSE)
 [![Web Repo](https://img.shields.io/badge/Web-frameflow--web-181717?style=flat-square&logo=github)](https://github.com/ahmedzzabdalla0/frameflow-web)
+[![Portfolio](https://img.shields.io/badge/Portfolio-frameflow-000000?style=flat-square&logo=vercel&logoColor=white)](https://portfolio-ahmedabdelsalam.vercel.app/projects/frameflow)
+[![License: MIT](https://img.shields.io/badge/License-MIT-e44444?style=flat-square)](./LICENSE)
 
 A production-ready **NestJS 12 + PostgreSQL + Prisma 7** backend for the FrameFlow media player. Scans a local video library, manages metadata and categories, generates thumbnails via `ffmpeg`, and streams video files — all behind a JWT-authenticated REST API with interactive **Swagger/OpenAPI** documentation.
 
@@ -13,7 +14,7 @@ A production-ready **NestJS 12 + PostgreSQL + Prisma 7** backend for the FrameFl
 
 ## 1. Project Overview
 
-FrameFlow API is a pure JSON + media-streaming backend built on NestJS's modular architecture. It scans a folder of video files and stores metadata (title, duration, size, rating, categories, thumbnail seek time) in a PostgreSQL database via Prisma 7 ORM. Thumbnails are generated on demand with `ffmpeg`. The Next.js frontend — **[frameflow-web](https://github.com/ahmedzzabdalla0/frameflow-web)** — is the only client; this service exposes no server-rendered views.
+FrameFlow API is a pure JSON + media-streaming backend built on NestJS's modular architecture. It scans a folder of video files and stores metadata (title, duration, size, rating, categories, thumbnail seek time) in a PostgreSQL database via Prisma 7 ORM. Thumbnails are generated on demand with `ffmpeg`. The Next.js frontend — **[frameflow-web](https://github.com/ahmedzzabdalla0/frameflow-web)** — is the only client; this service exposes no server-rendered views. This project is also featured on the **[author's portfolio](https://portfolio-ahmedabdelsalam.vercel.app/projects/frameflow)**.
 
 Key design decisions:
 
@@ -278,6 +279,7 @@ If you use, modify, or distribute this project or any part of its code, please m
 
 - **GitHub:** [@ahmedzzabdalla0](https://github.com/ahmedzzabdalla0)
 - **LinkedIn:** [Ahmed Mohamed Abdelsalam](https://www.linkedin.com/in/ahmedabdelsalam0)
+- **Portfolio:** [portfolio-ahmedabdelsalam.vercel.app](https://portfolio-ahmedabdelsalam.vercel.app)
 
 ---
 
