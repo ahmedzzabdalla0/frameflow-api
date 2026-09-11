@@ -11,10 +11,9 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { OkResponseDto } from '../../common/dto/ok-response.dto';
 import { Public } from '../../common/decorators/public.decorator';
-import { Roles } from '../../common/decorators/roles.decorator';
 import { BulkUpdateCategoriesDto } from './dto/bulk-update-categories.dto';
 import { QueryVideosDto } from './dto/query-videos.dto';
 import { RefreshMetadataDto } from './dto/refresh-metadata.dto';
@@ -53,9 +52,8 @@ export class VideosController {
     return this.videosService.listVideos(query);
   }
 
-  @Roles('ADMIN')
+  @Public()
   @Put('bulk-categories')
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Assign a set of categories to many videos at once' })
   @ApiResponse({ status: HttpStatus.OK, type: BulkUpdateCategoriesResponseDto })
   public async bulkUpdateCategories(
@@ -64,9 +62,8 @@ export class VideosController {
     return this.videosService.bulkUpdateCategories(bulkUpdateCategoriesDto);
   }
 
-  @Roles('ADMIN')
+  @Public()
   @Put(':id')
-  @ApiBearerAuth()
   @ApiOperation({ summary: "Update a video's title, categories, or rating" })
   @ApiResponse({ status: HttpStatus.OK, type: UpdateVideoResponseDto })
   public async update(
@@ -95,29 +92,26 @@ export class VideosController {
     return this.videosService.setRating(setRatingDto);
   }
 
-  @Roles('ADMIN')
+  @Public()
   @Delete(':id')
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete a video and its underlying file' })
   @ApiResponse({ status: HttpStatus.OK, type: OkResponseDto })
   public async remove(@Param('id', ParseIntPipe) id: number): Promise<OkResponseDto> {
     return this.videosService.remove(id);
   }
 
-  @Roles('ADMIN')
+  @Public()
   @HttpCode(HttpStatus.OK)
   @Post('scan')
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Scan the uploads directory for new video files' })
   @ApiResponse({ status: HttpStatus.OK, type: ScanResponseDto })
   public async scan(): Promise<ScanResponseDto> {
     return this.videosService.scan();
   }
 
-  @Roles('ADMIN')
+  @Public()
   @HttpCode(HttpStatus.OK)
   @Post('refresh-metadata')
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Re-probe duration and size metadata for videos' })
   @ApiResponse({ status: HttpStatus.OK, type: RefreshMetadataResponseDto })
   public async refreshMetadata(

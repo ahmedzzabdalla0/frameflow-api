@@ -1,9 +1,8 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
-import { ApiBearerAuth, ApiOperation, ApiParam, ApiProduces, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiProduces, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { OkResponseDto } from '../../common/dto/ok-response.dto';
 import { Public } from '../../common/decorators/public.decorator';
-import { Roles } from '../../common/decorators/roles.decorator';
 import { ClearThumbsResponseDto } from './dto/clear-thumbs-response.dto';
 import { SetThumbSeekDto } from './dto/set-thumb-seek.dto';
 import { ThumbnailsService } from './thumbnails.service';
@@ -38,20 +37,18 @@ export class ThumbnailsController {
     res.sendFile(thumbnailPath);
   }
 
-  @Roles('ADMIN')
+  @Public()
   @HttpCode(HttpStatus.OK)
   @Post('set-thumb-seek')
-  @ApiBearerAuth()
   @ApiOperation({ summary: "Set the timestamp used to generate a video's thumbnail" })
   @ApiResponse({ status: HttpStatus.OK, type: OkResponseDto })
   public async setThumbSeek(@Body() setThumbSeekDto: SetThumbSeekDto): Promise<OkResponseDto> {
     return this.thumbnailsService.setThumbSeek(setThumbSeekDto);
   }
 
-  @Roles('ADMIN')
+  @Public()
   @HttpCode(HttpStatus.OK)
   @Post('clear-thumbs')
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete all cached thumbnails so they regenerate on next request' })
   @ApiResponse({ status: HttpStatus.OK, type: ClearThumbsResponseDto })
   public async clearThumbs(): Promise<ClearThumbsResponseDto> {

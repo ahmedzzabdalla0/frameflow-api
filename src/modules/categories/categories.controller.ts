@@ -11,10 +11,9 @@ import {
   Put,
 } from '@nestjs/common';
 import { Category } from '@prisma/client';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { OkResponseDto } from '../../common/dto/ok-response.dto';
 import { Public } from '../../common/decorators/public.decorator';
-import { Roles } from '../../common/decorators/roles.decorator';
 import { CategoriesService } from './categories.service';
 import {
   CategoryOperationResponseDto,
@@ -49,10 +48,9 @@ export class CategoriesController {
     return this.categoriesService.getFullCategoryList();
   }
 
-  @Roles('ADMIN')
+  @Public()
   @HttpCode(HttpStatus.OK)
   @Post('reorder')
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Reorder categories by supplying their ids in the desired order' })
   @ApiResponse({ status: HttpStatus.OK, type: ReorderCategoriesResponseDto })
   public async reorder(
@@ -62,9 +60,8 @@ export class CategoriesController {
     return { ok: true, ids };
   }
 
-  @Roles('ADMIN')
+  @Public()
   @Post()
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a new category' })
   @ApiResponse({ status: HttpStatus.CREATED, type: CategoryOperationResponseDto })
   public async create(
@@ -74,9 +71,8 @@ export class CategoriesController {
     return { ok: true, category };
   }
 
-  @Roles('ADMIN')
+  @Public()
   @Put(':id')
-  @ApiBearerAuth()
   @ApiOperation({ summary: "Update a category's name or color" })
   @ApiResponse({ status: HttpStatus.OK, type: CategoryOperationResponseDto })
   public async update(
@@ -87,9 +83,8 @@ export class CategoriesController {
     return { ok: true, category };
   }
 
-  @Roles('ADMIN')
+  @Public()
   @Delete(':id')
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete a category' })
   @ApiResponse({ status: HttpStatus.OK, type: OkResponseDto })
   public async remove(@Param('id', ParseIntPipe) id: number): Promise<OkResponseDto> {
