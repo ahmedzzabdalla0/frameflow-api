@@ -20,7 +20,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: frameflow-api:v1.0.0
     restart: unless-stopped
+    env_file:
+      - .env
     depends_on:
       db:
         condition: service_healthy
@@ -41,11 +44,10 @@ services:
     ports:
       - '${PORT:-3568}:${PORT:-3568}'
     volumes:
-      - uploads_data:/app/storage/uploads
-      - thumbs_data:/app/storage/thumbs
-    command: sh -c "npx prisma migrate deploy && node dist/main.js"
+      - ./storage/uploads:/app/storage/uploads
+      - ./storage/thumbs:/app/storage/thumbs
+    command: sh -c "npx prisma migrate deploy && node dist/prisma/seed.js && node dist/src/main.js"
 
 volumes:
   postgres_data:
-  uploads_data:
-  thumbs_data:
+    name: frameflow_db_volume

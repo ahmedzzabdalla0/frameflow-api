@@ -99,16 +99,43 @@ src/
 
 ---
 
+يمكنك استبدال الجزء المنسوخ بالكامل في ملف `README.md` بالنص المحدث التالي:
+
 ## 4. Setup & Installation
 
-### Prerequisites
+### Option 1: Docker Compose (Recommended)
+
+The fastest and most reliable way to run FrameFlow API. It provisions PostgreSQL 16, handles volume persistence, executes Prisma database migrations, and boots the NestJS backend in isolated containers without needing local dependencies.
+
+```bash
+# 1. Configure environment variables
+cp .env.example .env
+
+# 2. Start PostgreSQL and API services in detached mode
+docker compose up -d --build
+```
+
+**What happens under the hood:**
+
+- PostgreSQL 16 starts on external port `5433` (to avoid local `5432` conflicts) and waits for health status (`pg_isready`).
+- NestJS application container waits for PostgreSQL, automatically runs `npx prisma migrate deploy`, and starts listening on port `3568`.
+
+Once started, interactive Swagger/OpenAPI documentation is available at **`http://localhost:3568/api/docs`**.
+
+---
+
+### Option 2: Local Manual Setup
+
+If you prefer running Node.js and PostgreSQL directly on your host machine:
+
+#### Prerequisites
 
 - Node.js 20+ (Node.js v24 supported)
 - TypeScript 5.x (`~5.7.0`)
 - PostgreSQL 16
 - `ffmpeg` and `ffprobe` available on the `PATH` (used for duration probing and thumbnail generation)
 
-### Steps
+#### Steps
 
 ```bash
 # 1. Install dependencies
@@ -215,28 +242,13 @@ The service ships with a multi-stage `Dockerfile` and a `docker-compose.yml` tha
 
 ```bash
 cp .env.example .env
-docker compose up --build
+docker compose up -d
 ```
 
 This starts two services:
 
 - `db` — PostgreSQL 16 Alpine, exposed externally on `5433:5432` with a health check (`pg_isready`) gating the app's startup.
 - `app` — builds the runtime container, waits for `db` healthiness, executes `npx prisma migrate deploy`, and boots NestJS.
-
-Useful follow-up commands:
-
-```bash
-docker compose logs -f app
-docker compose exec app npm run prisma:seed
-docker compose down
-docker compose down -v
-```
-
-To rebuild after dependency changes:
-
-```bash
-docker compose up --build --force-recreate
-```
 
 ---
 
